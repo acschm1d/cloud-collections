@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:latest-jdk11
+FROM jenkins/jenkins:2.385-jdk11
 
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 ENV CASC_JENKINS_CONFIG /var/jenkins_home/casc.yaml
