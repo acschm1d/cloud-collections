@@ -1,0 +1,27 @@
+#cloud-config
+
+users:
+  - name: myuser
+    groups: sudo
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh-authorized-keys:
+      - ssh-rsa [...]
+  - name: root
+    ssh-authorized-keys:
+      - ssh-rsa [...]
+
+runcmd:
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '/^PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '$aAllowUsers myuser' /etc/ssh/ssh_config
+  - restart ssh
+  - sudo apt-get update && sudo apt-get -y install ca-certificates wget net-tools gnupg
+  - export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+  - touch /tmp/preseed.txt
+  - printf "tzdata tzdata/Areas select Europe\ntzdata tzdata/Zones/Europe select Berlin" > /tmp/preseed.txt
+  - debconf-set-selections /tmp/preseed.txt
+  - sudo apt-get install tzdata
+  - wget https://as-repository.openvpn.net/as-repo-public.asc -qO /etc/apt/trusted.gpg.d/as-repository.asc
+  - echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/as-repository.asc] http://as-repository.openvpn.net/as/debian jammy main">/etc/apt/sources.list.d/openvpn-as-repo.list
+  - sudo apt-get update && sudo apt-get -y install openvpn-as
