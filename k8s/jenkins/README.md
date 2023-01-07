@@ -32,7 +32,7 @@ NAME                       READY   STATUS    RESTARTS   AGE
 jenkins-68675bf956-9qrl5   1/1     Running   0          5s
 ```
 
-Tunnel the service to make it accesible to the host:
+Tunnel the traffic to the service:
 
 ```
 minikube tunnel jenkins --url
