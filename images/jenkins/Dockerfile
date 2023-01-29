@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.385-jdk11
+FROM --platform=linux/amd64 jenkins/jenkins:2.385-jdk11
 
 LABEL org.opencontainers.image.source=https://github.com/acschm1d/cloud-collections
 
